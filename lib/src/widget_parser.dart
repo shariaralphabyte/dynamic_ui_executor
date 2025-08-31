@@ -339,7 +339,17 @@ class WidgetParser {
     
     return ElevatedButton(
       onPressed: onPressedMatch != null 
-        ? () => actionHandler?.call('custom', {'code': onPressedMatch.group(1)})
+        ? () {
+            final actionCode = onPressedMatch.group(1)?.trim();
+            if (actionCode != null) {
+              // Extract function name from function call like "increment()" -> "increment"
+              final functionMatch = RegExp(r'(\w+)\(\)').firstMatch(actionCode);
+              if (functionMatch != null) {
+                final actionName = functionMatch.group(1)!;
+                actionHandler?.call(actionName, {});
+              }
+            }
+          }
         : null,
       child: Text(childMatch?.group(2) ?? 'Button'),
     );
