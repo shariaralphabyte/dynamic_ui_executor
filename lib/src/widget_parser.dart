@@ -532,22 +532,48 @@ class WidgetParser {
 
   Widget _parseElevatedButtonString(String definition) {
     final childMatch = RegExp(r'''child:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);
+    
+    // Enhanced regex to handle different onPressed formats
     final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
+    final onPressedSimpleMatch = RegExp(r'onPressed:\s*\(\)\s*=>\s*([^,)]+)').firstMatch(definition);
+    final onPressedDirectMatch = RegExp(r'onPressed:\s*([^,)]+)').firstMatch(definition);
+    
+    VoidCallback? onPressed;
+    
+    if (onPressedMatch != null) {
+      // Handle { } format
+      final actionCode = onPressedMatch.group(1)?.trim();
+      if (actionCode != null) {
+        final functionMatch = RegExp(r'_handleAction\([\'"](\w+)[\'"]').firstMatch(actionCode);
+        if (functionMatch != null) {
+          final actionName = functionMatch.group(1)!;
+          onPressed = () => actionHandler?.call(actionName, {});
+        }
+      }
+    } else if (onPressedSimpleMatch != null) {
+      // Handle => format
+      final actionCode = onPressedSimpleMatch.group(1)?.trim();
+      if (actionCode != null) {
+        final functionMatch = RegExp(r'_handleAction\([\'"](\w+)[\'"]').firstMatch(actionCode);
+        if (functionMatch != null) {
+          final actionName = functionMatch.group(1)!;
+          onPressed = () => actionHandler?.call(actionName, {});
+        }
+      }
+    } else if (onPressedDirectMatch != null) {
+      // Handle direct function call format
+      final actionCode = onPressedDirectMatch.group(1)?.trim();
+      if (actionCode != null && actionCode.contains('_handleAction')) {
+        final functionMatch = RegExp(r'_handleAction\([\'"](\w+)[\'"]').firstMatch(actionCode);
+        if (functionMatch != null) {
+          final actionName = functionMatch.group(1)!;
+          onPressed = () => actionHandler?.call(actionName, {});
+        }
+      }
+    }
     
     return ElevatedButton(
-      onPressed: onPressedMatch != null 
-        ? () {
-            final actionCode = onPressedMatch.group(1)?.trim();
-            if (actionCode != null) {
-              // Extract function name from function call like "increment()" -> "increment"
-              final functionMatch = RegExp(r'(\w+)\(\)').firstMatch(actionCode);
-              if (functionMatch != null) {
-                final actionName = functionMatch.group(1)!;
-                actionHandler?.call(actionName, {});
-              }
-            }
-          }
-        : null,
+      onPressed: onPressed,
       child: Text(childMatch?.group(2) ?? 'Button'),
     );
   }
