@@ -454,8 +454,79 @@ class WidgetParser {
   }
 
   Widget _parseTextString(String definition) {
-    final textMatch = RegExp(r'''Text\((["'])(.*?)\1\)''').firstMatch(definition);
-    return Text(textMatch?.group(2) ?? '');
+    // Match text content
+    final textMatch = RegExp(r'''Text\((["'])(.*?)\1''').firstMatch(definition);
+    String text = textMatch?.group(2) ?? '';
+    
+    // Match style if present
+    final styleMatch = RegExp(r'style:\s*TextStyle\(([^)]*)\)').firstMatch(definition);
+    TextStyle? style;
+    
+    if (styleMatch != null) {
+      final styleContent = styleMatch.group(1)!;
+      
+      // Parse color
+      Color? color;
+      final colorMatch = RegExp(r'color:\s*Colors\.(\w+)').firstMatch(styleContent);
+      if (colorMatch != null) {
+        color = _getColorFromName(colorMatch.group(1)!);
+      }
+      
+      // Parse fontSize
+      double? fontSize;
+      final fontSizeMatch = RegExp(r'fontSize:\s*(\d+(?:\.\d+)?)').firstMatch(styleContent);
+      if (fontSizeMatch != null) {
+        fontSize = double.parse(fontSizeMatch.group(1)!);
+      }
+      
+      // Parse fontWeight
+      FontWeight? fontWeight;
+      final fontWeightMatch = RegExp(r'fontWeight:\s*FontWeight\.(\w+)').firstMatch(styleContent);
+      if (fontWeightMatch != null) {
+        switch (fontWeightMatch.group(1)) {
+          case 'bold':
+            fontWeight = FontWeight.bold;
+            break;
+          case 'w100':
+            fontWeight = FontWeight.w100;
+            break;
+          case 'w200':
+            fontWeight = FontWeight.w200;
+            break;
+          case 'w300':
+            fontWeight = FontWeight.w300;
+            break;
+          case 'w400':
+            fontWeight = FontWeight.w400;
+            break;
+          case 'w500':
+            fontWeight = FontWeight.w500;
+            break;
+          case 'w600':
+            fontWeight = FontWeight.w600;
+            break;
+          case 'w700':
+            fontWeight = FontWeight.w700;
+            break;
+          case 'w800':
+            fontWeight = FontWeight.w800;
+            break;
+          case 'w900':
+            fontWeight = FontWeight.w900;
+            break;
+          default:
+            fontWeight = FontWeight.normal;
+        }
+      }
+      
+      style = TextStyle(
+        color: color,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+      );
+    }
+    
+    return Text(text, style: style);
   }
 
 
