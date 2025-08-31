@@ -1,7 +1,7 @@
 name: dynamic_ui_executor
-description: "A new Flutter project."
-version: 0.0.1
-homepage:
+description: "Build Flutter UIs dynamically at runtime from server-provided widget definitions (JSON or string), overcoming AOT compilation limits."
+version: 1.0.0
+homepage: https://github.com/shariaralphabyte/dynamic_ui_executor
 
 environment:
   sdk: ^3.7.2
