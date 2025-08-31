@@ -1,9 +1,9 @@
 name: dynamic_ui_executor
 description: A powerful Flutter plugin for creating dynamic user interfaces from JSON or string definitions at runtime. Perfect for server-driven UI, A/B testing, and flexible app interfaces.
 version: 1.0.0
-homepage: https://github.com/yourusername/dynamic_ui_executor
-repository: https://github.com/yourusername/dynamic_ui_executor
-issue_tracker: https://github.com/yourusername/dynamic_ui_executor/issues
+homepage: https://github.com/shariaralphabyte/dynamic_ui_executor
+repository: https://github.com/shariaralphabyte/dynamic_ui_executor
+issue_tracker: https://github.com/shariaralphabyte/dynamic_ui_executor/issues
 documentation: https://pub.dev/documentation/dynamic_ui_executor/latest/
 
 topics:
