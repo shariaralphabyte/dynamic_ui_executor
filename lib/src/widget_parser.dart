@@ -294,8 +294,7 @@ class WidgetParser {
   }
 
   PreferredSizeWidget _parseAppBarString(String definition) {
-    final titleMatch = RegExp(r'title:\s*Text\([\'"]([^\'"]*)[\'"]').firstMatch(definition);
-    return AppBar(
+    final titleMatch = RegExp(r'''title:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);    return AppBar(
       title: titleMatch != null ? Text(titleMatch.group(1)!) : null,
     );
   }
@@ -326,13 +325,13 @@ class WidgetParser {
   }
 
   Widget _parseTextString(String definition) {
-    final textMatch = RegExp(r"Text\(['\"]([^'\"]*)['\"]").firstMatch(definition);
-    return Text(textMatch?.group(1) ?? '');
+    final textMatch = RegExp(r'''Text\((["'])(.*?)\1\)''').firstMatch(definition);
+    return Text(textMatch?.group(2) ?? '');
   }
 
+
   Widget _parseElevatedButtonString(String definition) {
-    final childMatch = RegExp(r"child:\s*Text\(['\"]([^'\"]*)['\"]").firstMatch(definition);
-    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
+    final childMatch = RegExp(r'''child:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
     
     return ElevatedButton(
       onPressed: onPressedMatch != null 
