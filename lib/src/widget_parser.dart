@@ -114,6 +114,36 @@ class WidgetParser {
       return _parseTextFieldString(definition);
     } else if (definition.startsWith('Switch(')) {
       return _parseSwitchString(definition);
+    } else if (definition.startsWith('Card(')) {
+      return _parseCardString(definition);
+    } else if (definition.startsWith('ListTile(')) {
+      return _parseListTileString(definition);
+    } else if (definition.startsWith('Chip(')) {
+      return _parseChipString(definition);
+    } else if (definition.startsWith('FloatingActionButton(')) {
+      return _parseFloatingActionButtonString(definition);
+    } else if (definition.startsWith('TextButton(')) {
+      return _parseTextButtonString(definition);
+    } else if (definition.startsWith('OutlinedButton(')) {
+      return _parseOutlinedButtonString(definition);
+    } else if (definition.startsWith('IconButton(')) {
+      return _parseIconButtonString(definition);
+    } else if (definition.startsWith('Expanded(')) {
+      return _parseExpandedString(definition);
+    } else if (definition.startsWith('Flexible(')) {
+      return _parseFlexibleString(definition);
+    } else if (definition.startsWith('Stack(')) {
+      return _parseStackString(definition);
+    } else if (definition.startsWith('Positioned(')) {
+      return _parsePositionedString(definition);
+    } else if (definition.startsWith('Wrap(')) {
+      return _parseWrapString(definition);
+    } else if (definition.startsWith('Divider(')) {
+      return _parseDividerString(definition);
+    } else if (definition.startsWith('Image.network(')) {
+      return _parseImageNetworkString(definition);
+    } else if (definition.startsWith('Image.asset(')) {
+      return _parseImageAssetString(definition);
     }
     
     return Text('Cannot parse: ${definition.substring(0, definition.length > 50 ? 50 : definition.length)}...');
@@ -526,9 +556,9 @@ class WidgetParser {
         Container(
           width: 120,
           height: 100,
-          margin: EdgeInsets.all(8),
+          margin: const EdgeInsets.all(8),
           color: Colors.blue,
-          child: Center(child: Text('List Item', style: TextStyle(color: Colors.white))),
+          child: const Center(child: Text('List Item', style: TextStyle(color: Colors.white))),
         ),
       ];
     }
@@ -546,15 +576,15 @@ class WidgetParser {
     
     // For now, return a simple placeholder since List.generate is complex to parse
     List<Widget> children = List.generate(4, (index) => Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       color: Colors.green,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.dashboard, size: 40, color: Colors.white),
-            SizedBox(height: 10),
-            Text('Grid $index', style: TextStyle(color: Colors.white)),
+            const Icon(Icons.dashboard, size: 40, color: Colors.white),
+            const SizedBox(height: 10),
+            Text('Grid $index', style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),
@@ -587,6 +617,268 @@ class WidgetParser {
     );
   }
 
+  // Additional widget parsers for comprehensive support
+  Widget _parseCardString(String definition) {
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    final elevationMatch = RegExp(r'elevation:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final marginMatch = RegExp(r'margin:\s*EdgeInsets\.all\((\d+(?:\.\d+)?)\)').firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return Card(
+      elevation: elevationMatch != null ? double.parse(elevationMatch.group(1)!) : 1.0,
+      margin: marginMatch != null ? EdgeInsets.all(double.parse(marginMatch.group(1)!)) : const EdgeInsets.all(4.0),
+      child: child,
+    );
+  }
+
+  Widget _parseListTileString(String definition) {
+    final titleMatch = RegExp(r'title:\s*Text\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final subtitleMatch = RegExp(r'subtitle:\s*Text\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final leadingMatch = RegExp(r'leading:\s*(.+?)(?=,|\))').firstMatch(definition);
+    final trailingMatch = RegExp(r'trailing:\s*(.+?)(?=,|\))').firstMatch(definition);
+    
+    return ListTile(
+      title: titleMatch != null ? Text(titleMatch.group(1)!) : null,
+      subtitle: subtitleMatch != null ? Text(subtitleMatch.group(1)!) : null,
+      leading: leadingMatch != null ? _parseStringWidget(leadingMatch.group(1)!.trim()) : null,
+      trailing: trailingMatch != null ? _parseStringWidget(trailingMatch.group(1)!.trim()) : null,
+    );
+  }
+
+  Widget _parseChipString(String definition) {
+    final labelMatch = RegExp(r'label:\s*Text\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final avatarMatch = RegExp(r'avatar:\s*(.+?)(?=,|\))').firstMatch(definition);
+    
+    return Chip(
+      label: Text(labelMatch?.group(1) ?? 'Chip'),
+      avatar: avatarMatch != null ? _parseStringWidget(avatarMatch.group(1)!.trim()) : null,
+    );
+  }
+
+  Widget _parseFloatingActionButtonString(String definition) {
+    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+?)(?=,|\))').firstMatch(definition);
+    final backgroundColorMatch = RegExp(r'backgroundColor:\s*Colors\.(\w+)').firstMatch(definition);
+    
+    return FloatingActionButton(
+      onPressed: onPressedMatch != null 
+        ? () {
+            final actionCode = onPressedMatch.group(1)?.trim();
+            if (actionCode != null) {
+              final functionMatch = RegExp(r'(\w+)\(\)').firstMatch(actionCode);
+              if (functionMatch != null) {
+                final actionName = functionMatch.group(1)!;
+                actionHandler?.call(actionName, {});
+              }
+            }
+          }
+        : null,
+      backgroundColor: backgroundColorMatch != null ? _getColorFromName(backgroundColorMatch.group(1)!) : null,
+      child: childMatch != null ? _parseStringWidget(childMatch.group(1)!.trim()) : const Icon(Icons.add),
+    );
+  }
+
+  Widget _parseTextButtonString(String definition) {
+    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+?)(?=,|\))').firstMatch(definition);
+    
+    return TextButton(
+      onPressed: onPressedMatch != null 
+        ? () {
+            final actionCode = onPressedMatch.group(1)?.trim();
+            if (actionCode != null) {
+              final functionMatch = RegExp(r'(\w+)\(\)').firstMatch(actionCode);
+              if (functionMatch != null) {
+                final actionName = functionMatch.group(1)!;
+                actionHandler?.call(actionName, {});
+              }
+            }
+          }
+        : null,
+      child: childMatch != null ? _parseStringWidget(childMatch.group(1)!.trim()) : const Text('Button'),
+    );
+  }
+
+  Widget _parseOutlinedButtonString(String definition) {
+    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+?)(?=,|\))').firstMatch(definition);
+    
+    return OutlinedButton(
+      onPressed: onPressedMatch != null 
+        ? () {
+            final actionCode = onPressedMatch.group(1)?.trim();
+            if (actionCode != null) {
+              final functionMatch = RegExp(r'(\w+)\(\)').firstMatch(actionCode);
+              if (functionMatch != null) {
+                final actionName = functionMatch.group(1)!;
+                actionHandler?.call(actionName, {});
+              }
+            }
+          }
+        : null,
+      child: childMatch != null ? _parseStringWidget(childMatch.group(1)!.trim()) : const Text('Button'),
+    );
+  }
+
+  Widget _parseIconButtonString(String definition) {
+    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
+    final iconMatch = RegExp(r'icon:\s*(.+?)(?=,|\))').firstMatch(definition);
+    
+    return IconButton(
+      onPressed: onPressedMatch != null 
+        ? () {
+            final actionCode = onPressedMatch.group(1)?.trim();
+            if (actionCode != null) {
+              final functionMatch = RegExp(r'(\w+)\(\)').firstMatch(actionCode);
+              if (functionMatch != null) {
+                final actionName = functionMatch.group(1)!;
+                actionHandler?.call(actionName, {});
+              }
+            }
+          }
+        : null,
+      icon: iconMatch != null ? _parseStringWidget(iconMatch.group(1)!.trim()) : const Icon(Icons.touch_app),
+    );
+  }
+
+  Widget _parseExpandedString(String definition) {
+    final flexMatch = RegExp(r'flex:\s*(\d+)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return Expanded(
+      flex: flexMatch != null ? int.parse(flexMatch.group(1)!) : 1,
+      child: child ?? Container(),
+    );
+  }
+
+  Widget _parseFlexibleString(String definition) {
+    final flexMatch = RegExp(r'flex:\s*(\d+)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return Flexible(
+      flex: flexMatch != null ? int.parse(flexMatch.group(1)!) : 1,
+      child: child ?? Container(),
+    );
+  }
+
+  Widget _parseStackString(String definition) {
+    final childrenMatch = RegExp(r'children:\s*\[(.*?)\]', dotAll: true).firstMatch(definition);
+    List<Widget> children = [];
+    
+    if (childrenMatch != null) {
+      children = _parseChildrenFromString(childrenMatch.group(1)!);
+    }
+    
+    return Stack(children: children);
+  }
+
+  Widget _parsePositionedString(String definition) {
+    final topMatch = RegExp(r'top:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final leftMatch = RegExp(r'left:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final rightMatch = RegExp(r'right:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final bottomMatch = RegExp(r'bottom:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return Positioned(
+      top: topMatch != null ? double.parse(topMatch.group(1)!) : null,
+      left: leftMatch != null ? double.parse(leftMatch.group(1)!) : null,
+      right: rightMatch != null ? double.parse(rightMatch.group(1)!) : null,
+      bottom: bottomMatch != null ? double.parse(bottomMatch.group(1)!) : null,
+      child: child ?? Container(),
+    );
+  }
+
+  Widget _parseWrapString(String definition) {
+    final childrenMatch = RegExp(r'children:\s*\[(.*?)\]', dotAll: true).firstMatch(definition);
+    final spacingMatch = RegExp(r'spacing:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final runSpacingMatch = RegExp(r'runSpacing:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    
+    List<Widget> children = [];
+    if (childrenMatch != null) {
+      children = _parseChildrenFromString(childrenMatch.group(1)!);
+    }
+    
+    return Wrap(
+      spacing: spacingMatch != null ? double.parse(spacingMatch.group(1)!) : 0.0,
+      runSpacing: runSpacingMatch != null ? double.parse(runSpacingMatch.group(1)!) : 0.0,
+      children: children,
+    );
+  }
+
+  Widget _parseDividerString(String definition) {
+    final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final thicknessMatch = RegExp(r'thickness:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final colorMatch = RegExp(r'color:\s*Colors\.(\w+)').firstMatch(definition);
+    
+    return Divider(
+      height: heightMatch != null ? double.parse(heightMatch.group(1)!) : null,
+      thickness: thicknessMatch != null ? double.parse(thicknessMatch.group(1)!) : null,
+      color: colorMatch != null ? _getColorFromName(colorMatch.group(1)!) : null,
+    );
+  }
+
+  Widget _parseImageNetworkString(String definition) {
+    final urlMatch = RegExp(r'Image\.network\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final widthMatch = RegExp(r'width:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final fitMatch = RegExp(r'fit:\s*BoxFit\.(\w+)').firstMatch(definition);
+    
+    return Image.network(
+      urlMatch?.group(1) ?? '',
+      width: widthMatch != null ? double.parse(widthMatch.group(1)!) : null,
+      height: heightMatch != null ? double.parse(heightMatch.group(1)!) : null,
+      fit: fitMatch != null ? _getBoxFitFromName(fitMatch.group(1)!) : null,
+      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+    );
+  }
+
+  Widget _parseImageAssetString(String definition) {
+    final assetMatch = RegExp(r'Image\.asset\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final widthMatch = RegExp(r'width:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final fitMatch = RegExp(r'fit:\s*BoxFit\.(\w+)').firstMatch(definition);
+    
+    return Image.asset(
+      assetMatch?.group(1) ?? '',
+      width: widthMatch != null ? double.parse(widthMatch.group(1)!) : null,
+      height: heightMatch != null ? double.parse(heightMatch.group(1)!) : null,
+      fit: fitMatch != null ? _getBoxFitFromName(fitMatch.group(1)!) : null,
+      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+    );
+  }
+
+  BoxFit? _getBoxFitFromName(String fitName) {
+    switch (fitName.toLowerCase()) {
+      case 'fill': return BoxFit.fill;
+      case 'contain': return BoxFit.contain;
+      case 'cover': return BoxFit.cover;
+      case 'fitwidth': return BoxFit.fitWidth;
+      case 'fitheight': return BoxFit.fitHeight;
+      case 'none': return BoxFit.none;
+      case 'scaledown': return BoxFit.scaleDown;
+      default: return null;
+    }
+  }
+
   Color? _getColorFromName(String colorName) {
     switch (colorName.toLowerCase()) {
       case 'red': return Colors.red;
@@ -607,6 +899,7 @@ class WidgetParser {
       case 'grey': case 'gray': return Colors.grey;
       case 'black': return Colors.black;
       case 'white': return Colors.white;
+      case 'transparent': return Colors.transparent;
       default: return null;
     }
   }

@@ -31,7 +31,7 @@ class DemoHomePage extends StatefulWidget {
 
 class _DemoHomePageState extends State<DemoHomePage> {
   int _selectedIndex = 0;
-  int _counter = 0;
+  // int _counter = 0;
 
   // Example: Full Widget Demo UI as a string
   String get stringWidgetDefinition => """

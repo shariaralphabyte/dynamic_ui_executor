@@ -1,15 +1,43 @@
 # Dynamic UI Executor
 
-Build Flutter UIs dynamically at runtime from server-provided widget definitions (JSON or string), overcoming AOT compilation limits. Perfect for enterprise, CMS-driven apps, dashboards, and server-driven layouts.
+[![pub package](https://img.shields.io/pub/v/dynamic_ui_executor.svg)](https://pub.dev/packages/dynamic_ui_executor)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A powerful Flutter plugin that enables you to create dynamic user interfaces from JSON or string definitions at runtime. Perfect for server-driven UI, A/B testing, and creating flexible, updatable app interfaces without requiring app store updates.
 
 ## Features
 
-- **Dynamic Widget Rendering**: Convert JSON or string-based widget definitions into live Flutter widgets
-- **Comprehensive Widget Support**: Scaffold, AppBar, Column, Row, Stack, Text, Image, ListView, GridView, ElevatedButton, and more
-- **Centralized Action Handling**: Handle button clicks, gestures, and navigation through a unified system
-- **Advanced Styling**: Support for colors, fonts, themes, padding, margins, and custom styling
-- **Server-Driven UI**: Update layouts without recompiling the app
-- **Extensible Architecture**: Register custom widgets and parsers
+- **Comprehensive Widget Support** - 35+ Flutter widgets supported out of the box
+- **Cross-Platform** - Works on iOS, Android, Web, and Desktop
+- **Dual Format Support** - JSON and Dart-like string definitions
+- **Real-time Updates** - Update UI without app recompilation
+- **Action Handling** - Built-in event handling system
+- **Rich Styling** - Colors, fonts, spacing, and layout options
+- **Production Ready** - Comprehensive error handling and validation
+- **Well Tested** - Extensive test coverage
+
+## Supported Widgets
+
+### Layout Widgets
+- `Scaffold`, `AppBar`, `Column`, `Row`, `Stack`, `Positioned`
+- `Container`, `SizedBox`, `Padding`, `Center`, `Expanded`, `Flexible`
+- `Wrap`, `SingleChildScrollView`, `ListView`, `GridView`
+
+### Material Widgets
+- `Card`, `ListTile`, `Divider`, `Chip`
+- `ElevatedButton`, `TextButton`, `OutlinedButton`, `IconButton`
+- `FloatingActionButton`, `Switch`, `TextField`
+
+### Display Widgets
+- `Text`, `Icon`, `Image.network`, `Image.asset`
+- `CircleAvatar`
+
+### Advanced Features
+- **Color Support** - 20+ predefined colors plus custom hex colors
+- **Icon Library** - 25+ commonly used Material icons
+- **Image Handling** - Network and asset images with error handling
+- **Responsive Layouts** - Flexible and expanded widgets
+- **Action System** - Custom event handling with parameter passing
 - **Cross-Platform**: Works on iOS, Android, Web, and Desktop
 - **Enterprise-Grade**: Includes error handling, logging, and validation
 
