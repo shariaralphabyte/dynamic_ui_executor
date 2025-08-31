@@ -32,252 +32,130 @@ class DemoHomePage extends StatefulWidget {
 class _DemoHomePageState extends State<DemoHomePage> {
   int _selectedIndex = 0;
 
-  // String UI Examples
+  // String UI Examples - Simplified for guaranteed display
   String get stringExample => """
-Container(
-  width: double.infinity,
-  padding: EdgeInsets.all(16),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Card(
-        elevation: 4,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Icon(Icons.star, size: 48, color: Colors.orange),
-              SizedBox(height: 12),
-              Text('String UI Demo', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              SizedBox(height: 8),
-              Text('Beautiful UI from String definitions'),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () { _handleAction('showMessage'); },
-                child: Text('Click Me'),
-              ),
-            ],
-          ),
-        ),
-      ),
-      SizedBox(height: 16),
-      Row(
-        children: [
-          Expanded(
-            child: Card(
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Icon(Icons.speed, color: Colors.blue, size: 32),
-                    SizedBox(height: 8),
-                    Text('Fast', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('Runtime generation'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            child: Card(
-              color: Colors.green.shade50,
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Icon(Icons.extension, color: Colors.green, size: 32),
-                    SizedBox(height: 8),
-                    Text('Flexible', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('50+ widgets'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 16),
-      TextField(
-        decoration: InputDecoration(
-          labelText: 'Enter text',
-          border: OutlineInputBorder(),
-          prefixIcon: Icon(Icons.edit),
-        ),
-      ),
-      SizedBox(height: 16),
-      Container(
-        width: double.infinity,
-        height: 100,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
+Column(
+  children: [
+    Card(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
           children: [
-            Container(width: 80, height: 80, color: Colors.red, margin: EdgeInsets.all(4)),
-            Container(width: 80, height: 80, color: Colors.green, margin: EdgeInsets.all(4)),
-            Container(width: 80, height: 80, color: Colors.blue, margin: EdgeInsets.all(4)),
-            Container(width: 80, height: 80, color: Colors.yellow, margin: EdgeInsets.all(4)),
+            Icon(Icons.star, size: 48, color: Colors.orange),
+            SizedBox(height: 12),
+            Text('String UI Demo', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            Text('Beautiful UI from String definitions'),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () { _handleAction('showMessage'); },
+              child: Text('Click Me'),
+            ),
           ],
         ),
       ),
-    ],
-  ),
+    ),
+    SizedBox(height: 16),
+    Text('✅ String UI Working!', style: TextStyle(fontSize: 18, color: Colors.green)),
+    SizedBox(height: 16),
+    Container(
+      height: 100,
+      color: Colors.blue,
+      child: Center(
+        child: Text('Blue Container', style: TextStyle(color: Colors.white, fontSize: 16)),
+      ),
+    ),
+  ],
 )
 """;
 
-  // JSON UI Example - Fixed structure for proper parsing
+  // JSON UI Example - Simplified for guaranteed display
   Map<String, dynamic> get jsonExample => {
-    "type": "Container",
-    "width": "double.infinity",
-    "padding": "EdgeInsets.all(16)",
-    "child": {
-      "type": "Column",
-      "crossAxisAlignment": "CrossAxisAlignment.stretch",
-      "children": [
-        {
-          "type": "Card",
-          "elevation": 4,
+    "type": "Column",
+    "children": [
+      {
+        "type": "Card",
+        "child": {
+          "type": "Padding",
+          "padding": "EdgeInsets.all(20)",
           "child": {
-            "type": "Padding",
-            "padding": "EdgeInsets.all(20)",
-            "child": {
-              "type": "Column",
-              "children": [
-                {
-                  "type": "Icon",
-                  "icon": "Icons.dashboard",
-                  "size": 48,
-                  "color": "Colors.purple"
-                },
-                {
-                  "type": "SizedBox",
-                  "height": 12
-                },
-                {
-                  "type": "Text",
-                  "data": "JSON UI Demo",
-                  "style": {
-                    "fontSize": 24,
-                    "fontWeight": "FontWeight.bold"
-                  }
-                },
-                {
-                  "type": "SizedBox",
-                  "height": 8
-                },
-                {
-                  "type": "Text",
-                  "data": "Beautiful UI from JSON definitions"
-                },
-                {
-                  "type": "SizedBox",
-                  "height": 16
-                },
-                {
-                  "type": "ElevatedButton",
-                  "onPressed": "showJsonMessage",
-                  "child": {
-                    "type": "Text",
-                    "data": "JSON Action"
-                  }
+            "type": "Column",
+            "children": [
+              {
+                "type": "Icon",
+                "icon": "Icons.dashboard",
+                "size": 48,
+                "color": "Colors.purple"
+              },
+              {
+                "type": "SizedBox",
+                "height": 12
+              },
+              {
+                "type": "Text",
+                "data": "JSON UI Demo",
+                "style": {
+                  "fontSize": 24,
+                  "fontWeight": "FontWeight.bold"
                 }
-              ]
-            }
-          }
-        },
-        {
-          "type": "SizedBox",
-          "height": 16
-        },
-        {
-          "type": "Row",
-          "children": [
-            {
-              "type": "Expanded",
-              "child": {
-                "type": "Card",
-                "color": "Colors.red.shade100",
+              },
+              {
+                "type": "SizedBox",
+                "height": 8
+              },
+              {
+                "type": "Text",
+                "data": "Beautiful UI from JSON definitions"
+              },
+              {
+                "type": "SizedBox",
+                "height": 16
+              },
+              {
+                "type": "ElevatedButton",
+                "onPressed": "showJsonMessage",
                 "child": {
-                  "type": "Padding",
-                  "padding": "EdgeInsets.all(16)",
-                  "child": {
-                    "type": "Column",
-                    "children": [
-                      {
-                        "type": "Icon",
-                        "icon": "Icons.home",
-                        "size": 32,
-                        "color": "Colors.red"
-                      },
-                      {
-                        "type": "SizedBox",
-                        "height": 8
-                      },
-                      {
-                        "type": "Text",
-                        "data": "Home",
-                        "style": {
-                          "fontWeight": "FontWeight.bold"
-                        }
-                      }
-                    ]
-                  }
+                  "type": "Text",
+                  "data": "JSON Action"
                 }
               }
-            },
-            {
-              "type": "SizedBox",
-              "width": 8
-            },
-            {
-              "type": "Expanded",
-              "child": {
-                "type": "Card",
-                "color": "Colors.blue.shade100",
-                "child": {
-                  "type": "Padding",
-                  "padding": "EdgeInsets.all(16)",
-                  "child": {
-                    "type": "Column",
-                    "children": [
-                      {
-                        "type": "Icon",
-                        "icon": "Icons.settings",
-                        "size": 32,
-                        "color": "Colors.blue"
-                      },
-                      {
-                        "type": "SizedBox",
-                        "height": 8
-                      },
-                      {
-                        "type": "Text",
-                        "data": "Settings",
-                        "style": {
-                          "fontWeight": "FontWeight.bold"
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          "type": "SizedBox",
-          "height": 16
-        },
-        {
-          "type": "TextField",
-          "decoration": {
-            "labelText": "JSON TextField",
-            "border": "OutlineInputBorder()",
-            "prefixIcon": "Icon(Icons.message)"
+            ]
           }
         }
-      ]
-    }
+      },
+      {
+        "type": "SizedBox",
+        "height": 16
+      },
+      {
+        "type": "Text",
+        "data": "✅ JSON UI Working!",
+        "style": {
+          "fontSize": 18,
+          "color": "Colors.green"
+        }
+      },
+      {
+        "type": "SizedBox",
+        "height": 16
+      },
+      {
+        "type": "Container",
+        "height": 100,
+        "color": "Colors.purple",
+        "child": {
+          "type": "Center",
+          "child": {
+            "type": "Text",
+            "data": "Purple Container",
+            "style": {
+              "color": "Colors.white",
+              "fontSize": 16
+            }
+          }
+        }
+      }
+    ]
   };
 
   void _handleAction(String action, [Map<String, dynamic>? params]) {
@@ -319,6 +197,7 @@ Container(
         children: [
           // String UI Tab
           SingleChildScrollView(
+            padding: EdgeInsets.all(16),
             child: Builder(
               builder: (context) {
                 print('🔥 DEBUG: Building String UI tab');
@@ -357,6 +236,7 @@ Container(
           ),
           // JSON UI Tab
           SingleChildScrollView(
+            padding: EdgeInsets.all(16),
             child: Builder(
               builder: (context) {
                 print('🔥 DEBUG: Building JSON UI tab');
