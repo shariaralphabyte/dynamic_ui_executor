@@ -93,7 +93,7 @@ Column(
               },
               {
                 "type": "Text",
-                "data": "JSON UI Demo",
+                "text": "JSON UI Demo",
                 "style": {
                   "fontSize": 24,
                   "fontWeight": "FontWeight.bold"
@@ -105,7 +105,7 @@ Column(
               },
               {
                 "type": "Text",
-                "data": "Beautiful UI from JSON definitions"
+                "text": "Beautiful UI from JSON definitions"
               },
               {
                 "type": "SizedBox",
@@ -116,7 +116,7 @@ Column(
                 "onPressed": "showJsonMessage",
                 "child": {
                   "type": "Text",
-                  "data": "JSON Action"
+                  "text": "JSON Action"
                 }
               }
             ]
@@ -129,7 +129,7 @@ Column(
       },
       {
         "type": "Text",
-        "data": "✅ JSON UI Working!",
+        "text": "✅ JSON UI Working!",
         "style": {
           "fontSize": 18,
           "color": "Colors.green"
@@ -147,7 +147,7 @@ Column(
           "type": "Center",
           "child": {
             "type": "Text",
-            "data": "Purple Container",
+            "text": "Purple Container",
             "style": {
               "color": "Colors.white",
               "fontSize": 16
