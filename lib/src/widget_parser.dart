@@ -96,6 +96,8 @@ class WidgetParser {
       return _parseCenterString(definition);
     } else if (definition.startsWith('Container(')) {
       return _parseContainerString(definition);
+    } else if (definition.startsWith('SizedBox(')) {
+      return _parseSizedBoxString(definition);
     }
     
     return Text('Cannot parse: ${definition.substring(0, definition.length > 50 ? 50 : definition.length)}...');
@@ -343,6 +345,42 @@ class WidgetParser {
     );
   }
 
+  Widget _parseContainerString(String definition) {
+    final widthMatch = RegExp(r'width:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final colorMatch = RegExp(r'color:\s*Colors\.(\w+)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return Container(
+      width: widthMatch != null ? double.parse(widthMatch.group(1)!) : null,
+      height: heightMatch != null ? double.parse(heightMatch.group(1)!) : null,
+      color: colorMatch != null ? _getColorFromName(colorMatch.group(1)!) : null,
+      child: child,
+    );
+  }
+
+  Widget _parseSizedBoxString(String definition) {
+    final widthMatch = RegExp(r'width:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return SizedBox(
+      width: widthMatch != null ? double.parse(widthMatch.group(1)!) : null,
+      height: heightMatch != null ? double.parse(heightMatch.group(1)!) : null,
+      child: child,
+    );
+  }
+
   Widget _parseCenterString(String definition) {
     final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
     Widget? child;
@@ -354,12 +392,26 @@ class WidgetParser {
     return Center(child: child);
   }
 
-  Widget _parseContainerString(String definition) {
-    // Simple container parsing - can be enhanced
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: const Text('Container'),
-    );
+  Color? _getColorFromName(String colorName) {
+    switch (colorName.toLowerCase()) {
+      case 'red': return Colors.red;
+      case 'blue': return Colors.blue;
+      case 'green': return Colors.green;
+      case 'yellow': return Colors.yellow;
+      case 'orange': return Colors.orange;
+      case 'purple': return Colors.purple;
+      case 'pink': return Colors.pink;
+      case 'teal': return Colors.teal;
+      case 'cyan': return Colors.cyan;
+      case 'indigo': return Colors.indigo;
+      case 'amber': return Colors.amber;
+      case 'lime': return Colors.lime;
+      case 'brown': return Colors.brown;
+      case 'grey': case 'gray': return Colors.grey;
+      case 'black': return Colors.black;
+      case 'white': return Colors.white;
+      default: return null;
+    }
   }
 
   List<Widget> _parseChildrenFromString(String childrenString) {

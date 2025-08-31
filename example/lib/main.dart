@@ -46,12 +46,12 @@ class _DemoHomePageState extends State<DemoHomePage> {
             Text('Counter: $_counter'),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () { print('Increment pressed'); },
+              onPressed: () { _handleAction('increment', {}); },
               child: Text('Increment Counter'),
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () { print('Show snackbar'); },
+              onPressed: () { _handleAction('showSnackBar', {}); },
               child: Text('Show SnackBar'),
             )
           ],
