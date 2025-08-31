@@ -319,13 +319,6 @@ class WidgetParser {
     );
   }
 
-  Widget _buildPadding(Map<String, dynamic> props, List<dynamic>? children) {
-    final child = children?.isNotEmpty == true ? _parseJsonWidget(children!.first) : null;
-    return Padding(
-      padding: _parseEdgeInsets(props['padding']) ?? const EdgeInsets.all(8.0),
-      child: child,
-    );
-  }
 
   Widget _buildCard(Map<String, dynamic> props, List<dynamic>? children) {
     final child = children?.isNotEmpty == true ? _parseJsonWidget(children!.first) : null;
@@ -531,53 +524,22 @@ class WidgetParser {
 
 
   Widget _parseElevatedButtonString(String definition) {
-    final childMatch = RegExp(r'''child:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);
-    
-    // Enhanced regex to handle different onPressed formats
-    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
-    final onPressedSimpleMatch = RegExp(r'onPressed:\s*\(\)\s*=>\s*([^,)]+)').firstMatch(definition);
-    final onPressedDirectMatch = RegExp(r'onPressed:\s*([^,)]+)').firstMatch(definition);
-    
+    final childMatch = RegExp(r"child:\s*Text\('([^']+)'\)").firstMatch(definition);
+
+    // Simple regex to find _handleAction calls
+    final actionMatch = RegExp(r"_handleAction\('(\w+)'\)").firstMatch(definition);
+
     VoidCallback? onPressed;
-    
-    if (onPressedMatch != null) {
-      // Handle { } format
-      final actionCode = onPressedMatch.group(1)?.trim();
-      if (actionCode != null) {
-        final functionMatch = RegExp(r'_handleAction\([\'"](\w+)[\'"]').firstMatch(actionCode);
-        if (functionMatch != null) {
-          final actionName = functionMatch.group(1)!;
-          onPressed = () => actionHandler?.call(actionName, {});
-        }
-      }
-    } else if (onPressedSimpleMatch != null) {
-      // Handle => format
-      final actionCode = onPressedSimpleMatch.group(1)?.trim();
-      if (actionCode != null) {
-        final functionMatch = RegExp(r'_handleAction\([\'"](\w+)[\'"]').firstMatch(actionCode);
-        if (functionMatch != null) {
-          final actionName = functionMatch.group(1)!;
-          onPressed = () => actionHandler?.call(actionName, {});
-        }
-      }
-    } else if (onPressedDirectMatch != null) {
-      // Handle direct function call format
-      final actionCode = onPressedDirectMatch.group(1)?.trim();
-      if (actionCode != null && actionCode.contains('_handleAction')) {
-        final functionMatch = RegExp(r'_handleAction\([\'"](\w+)[\'"]').firstMatch(actionCode);
-        if (functionMatch != null) {
-          final actionName = functionMatch.group(1)!;
-          onPressed = () => actionHandler?.call(actionName, {});
-        }
-      }
+    if (actionMatch != null) {
+      final actionName = actionMatch.group(1)!;
+      onPressed = () => actionHandler?.call(actionName, {});
     }
-    
+
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(childMatch?.group(2) ?? 'Button'),
+      child: Text(childMatch?.group(1) ?? 'Button'),
     );
   }
-
   Widget _parseContainerString(String definition) {
     // Parse width including double.infinity
     double? width;
