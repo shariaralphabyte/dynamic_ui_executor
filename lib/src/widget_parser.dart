@@ -173,6 +173,7 @@ class WidgetParser {
     return Column(
       mainAxisAlignment: _parseMainAxisAlignment(props['mainAxisAlignment']),
       crossAxisAlignment: _parseCrossAxisAlignment(props['crossAxisAlignment']),
+      mainAxisSize: MainAxisSize.min,
       children: children?.map((child) => _parseJsonWidget(child)).toList() ?? [],
     );
   }
@@ -358,6 +359,7 @@ class WidgetParser {
     
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: children,
     );
   }
