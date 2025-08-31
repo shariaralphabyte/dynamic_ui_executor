@@ -40,7 +40,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.dynamicui.dynamic_ui_executor
+        package: com.shariar99.dynamic_ui_executor
         pluginClass: DynamicUiExecutorPlugin
       ios:
         pluginClass: DynamicUiExecutorPlugin
