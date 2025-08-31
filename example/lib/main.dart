@@ -35,8 +35,10 @@ class _DemoHomePageState extends State<DemoHomePage> {
   // String UI Examples
   String get stringExample => """
 Container(
+  width: double.infinity,
   padding: EdgeInsets.all(16),
   child: Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Card(
         elevation: 4,
@@ -106,6 +108,7 @@ Container(
       ),
       SizedBox(height: 16),
       Container(
+        width: double.infinity,
         height: 100,
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -122,149 +125,136 @@ Container(
 )
 """;
 
-  // JSON UI Example
+  // JSON UI Example - Fixed structure for proper parsing
   Map<String, dynamic> get jsonExample => {
     "type": "Container",
-    "properties": {
-      "padding": "EdgeInsets.all(16)",
-      "child": {
-        "type": "Column",
-        "properties": {
+    "width": "double.infinity",
+    "padding": "EdgeInsets.all(16)",
+    "child": {
+      "type": "Column",
+      "crossAxisAlignment": "CrossAxisAlignment.stretch",
+      "children": [
+        {
+          "type": "Card",
+          "elevation": 4,
+          "child": {
+            "type": "Padding",
+            "padding": "EdgeInsets.all(20)",
+            "child": {
+              "type": "Column",
+              "children": [
+                {
+                  "type": "Icon",
+                  "icon": "Icons.dashboard",
+                  "size": 48,
+                  "color": "Colors.purple"
+                },
+                {
+                  "type": "SizedBox",
+                  "height": 12
+                },
+                {
+                  "type": "Text",
+                  "data": "JSON UI Demo",
+                  "style": {
+                    "fontSize": 24,
+                    "fontWeight": "FontWeight.bold"
+                  }
+                },
+                {
+                  "type": "SizedBox",
+                  "height": 8
+                },
+                {
+                  "type": "Text",
+                  "data": "Beautiful UI from JSON definitions"
+                },
+                {
+                  "type": "SizedBox",
+                  "height": 16
+                },
+                {
+                  "type": "ElevatedButton",
+                  "onPressed": "showJsonMessage",
+                  "child": {
+                    "type": "Text",
+                    "data": "JSON Action"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "SizedBox",
+          "height": 16
+        },
+        {
+          "type": "Row",
           "children": [
             {
-              "type": "Card",
-              "properties": {
-                "elevation": 4,
+              "type": "Expanded",
+              "child": {
+                "type": "Card",
+                "color": "Colors.red.shade100",
                 "child": {
                   "type": "Padding",
-                  "properties": {
-                    "padding": "EdgeInsets.all(20)",
-                    "child": {
-                      "type": "Column",
-                      "properties": {
-                        "children": [
-                          {
-                            "type": "Icon",
-                            "properties": {
-                              "icon": "Icons.dashboard",
-                              "size": 48,
-                              "color": "Colors.purple"
-                            }
-                          },
-                          {
-                            "type": "SizedBox",
-                            "properties": {"height": 12}
-                          },
-                          {
-                            "type": "Text",
-                            "properties": {
-                              "data": "JSON UI Demo",
-                              "style": {
-                                "fontSize": 24,
-                                "fontWeight": "FontWeight.bold"
-                              }
-                            }
-                          },
-                          {
-                            "type": "SizedBox",
-                            "properties": {"height": 8}
-                          },
-                          {
-                            "type": "Text",
-                            "properties": {"data": "Beautiful UI from JSON definitions"}
-                          },
-                          {
-                            "type": "SizedBox",
-                            "properties": {"height": 16}
-                          },
-                          {
-                            "type": "ElevatedButton",
-                            "properties": {
-                              "onPressed": "showJsonMessage",
-                              "child": {
-                                "type": "Text",
-                                "properties": {"data": "JSON Action"}
-                              }
-                            }
-                          }
-                        ]
+                  "padding": "EdgeInsets.all(16)",
+                  "child": {
+                    "type": "Column",
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "icon": "Icons.home",
+                        "size": 32,
+                        "color": "Colors.red"
+                      },
+                      {
+                        "type": "SizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "Text",
+                        "data": "Home",
+                        "style": {
+                          "fontWeight": "FontWeight.bold"
+                        }
                       }
-                    }
+                    ]
                   }
                 }
               }
             },
             {
               "type": "SizedBox",
-              "properties": {"height": 16}
+              "width": 8
             },
             {
-              "type": "Container",
-              "properties": {
-                "height": 150,
+              "type": "Expanded",
+              "child": {
+                "type": "Card",
+                "color": "Colors.blue.shade100",
                 "child": {
-                  "type": "GridView.count",
-                  "properties": {
-                    "crossAxisCount": 2,
+                  "type": "Padding",
+                  "padding": "EdgeInsets.all(16)",
+                  "child": {
+                    "type": "Column",
                     "children": [
                       {
-                        "type": "Card",
-                        "properties": {
-                          "color": "Colors.red.shade100",
-                          "child": {
-                            "type": "Center",
-                            "properties": {
-                              "child": {
-                                "type": "Column",
-                                "properties": {
-                                  "mainAxisAlignment": "MainAxisAlignment.center",
-                                  "children": [
-                                    {
-                                      "type": "Icon",
-                                      "properties": {
-                                        "icon": "Icons.home",
-                                        "size": 32
-                                      }
-                                    },
-                                    {
-                                      "type": "Text",
-                                      "properties": {"data": "Home"}
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          }
-                        }
+                        "type": "Icon",
+                        "icon": "Icons.settings",
+                        "size": 32,
+                        "color": "Colors.blue"
                       },
                       {
-                        "type": "Card",
-                        "properties": {
-                          "color": "Colors.blue.shade100",
-                          "child": {
-                            "type": "Center",
-                            "properties": {
-                              "child": {
-                                "type": "Column",
-                                "properties": {
-                                  "mainAxisAlignment": "MainAxisAlignment.center",
-                                  "children": [
-                                    {
-                                      "type": "Icon",
-                                      "properties": {
-                                        "icon": "Icons.settings",
-                                        "size": 32
-                                      }
-                                    },
-                                    {
-                                      "type": "Text",
-                                      "properties": {"data": "Settings"}
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          }
+                        "type": "SizedBox",
+                        "height": 8
+                      },
+                      {
+                        "type": "Text",
+                        "data": "Settings",
+                        "style": {
+                          "fontWeight": "FontWeight.bold"
                         }
                       }
                     ]
@@ -273,8 +263,20 @@ Container(
               }
             }
           ]
+        },
+        {
+          "type": "SizedBox",
+          "height": 16
+        },
+        {
+          "type": "TextField",
+          "decoration": {
+            "labelText": "JSON TextField",
+            "border": "OutlineInputBorder()",
+            "prefixIcon": "Icon(Icons.message)"
+          }
         }
-      }
+      ]
     }
   };
 
