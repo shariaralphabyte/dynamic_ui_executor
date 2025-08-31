@@ -59,41 +59,56 @@ class _DynamicWidgetExecutorState extends State<DynamicWidgetExecutor> {
   }
 
   void _parseWidget() {
+    print('🔥 DEBUG: Starting widget parsing, isJson: ${widget.isJson}');
+    print('🔥 DEBUG: Widget definition: ${widget.widgetDefinition.substring(0, 200)}...');
+    
     try {
       setState(() {
         _error = null;
         
         if (widget.isJson) {
+          print('🔥 DEBUG: Parsing JSON widget');
           final Map<String, dynamic> jsonData = json.decode(widget.widgetDefinition);
+          print('🔥 DEBUG: JSON decoded successfully: ${jsonData.keys}');
           
           // Validate JSON before parsing
           final validationResult = DynamicUIValidator.validateJson(jsonData);
+          print('🔥 DEBUG: JSON validation result: ${validationResult.isValid}');
           if (!validationResult.isValid) {
             throw Exception('Validation failed: ${validationResult.message}');
           }
           
           if (validationResult.warnings.isNotEmpty) {
+            print('🔥 DEBUG: JSON validation warnings: ${validationResult.warnings}');
             DynamicUILogger.warning('Validation warnings: ${validationResult.warnings.join(', ')}');
           }
           
           _parsedWidget = _parser.parseFromJson(jsonData);
+          print('🔥 DEBUG: JSON widget parsed successfully');
         } else {
+          print('🔥 DEBUG: Parsing String widget');
           // Validate string before parsing
           final validationResult = DynamicUIValidator.validateString(widget.widgetDefinition);
+          print('🔥 DEBUG: String validation result: ${validationResult.isValid}');
           if (!validationResult.isValid) {
             throw Exception('Validation failed: ${validationResult.message}');
           }
           
           if (validationResult.warnings.isNotEmpty) {
+            print('🔥 DEBUG: String validation warnings: ${validationResult.warnings}');
             DynamicUILogger.warning('Validation warnings: ${validationResult.warnings.join(', ')}');
           }
           
           _parsedWidget = _parser.parseFromString(widget.widgetDefinition);
+          print('🔥 DEBUG: String widget parsed successfully');
         }
         
         DynamicUILogger.info('Successfully parsed dynamic widget');
+        print('🔥 DEBUG: Widget parsing completed successfully');
       });
     } catch (e, stackTrace) {
+      print('🔥 DEBUG: Widget parsing failed: $e');
+      print('🔥 DEBUG: Stack trace: $stackTrace');
       DynamicUILogger.error('Failed to parse widget definition', e, stackTrace);
       setState(() {
         _error = e.toString();
@@ -104,7 +119,12 @@ class _DynamicWidgetExecutorState extends State<DynamicWidgetExecutor> {
 
   @override
   Widget build(BuildContext context) {
+    print('🔥 DEBUG: DynamicWidgetExecutor build called');
+    print('🔥 DEBUG: Error: $_error');
+    print('🔥 DEBUG: ParsedWidget is null: ${_parsedWidget == null}');
+    
     if (_error != null) {
+      print('🔥 DEBUG: Showing error widget');
       return widget.errorWidget ?? 
         Container(
           padding: const EdgeInsets.all(16),
@@ -128,6 +148,12 @@ class _DynamicWidgetExecutorState extends State<DynamicWidgetExecutor> {
         );
     }
 
-    return _parsedWidget ?? const CircularProgressIndicator();
+    if (_parsedWidget == null) {
+      print('🔥 DEBUG: Showing loading indicator');
+      return const Center(child: CircularProgressIndicator());
+    }
+    
+    print('🔥 DEBUG: Showing parsed widget');
+    return _parsedWidget!;
   }
 }
