@@ -69,91 +69,127 @@ Column(
 )
 """;
 
-  // JSON UI Example - Simplified for guaranteed display
+  // JSON UI Example - Fixed structure for proper parsing
   Map<String, dynamic> get jsonExample => {
     "type": "Column",
     "children": [
       {
         "type": "Card",
-        "child": {
-          "type": "Padding",
-          "padding": "EdgeInsets.all(20)",
-          "child": {
-            "type": "Column",
+        "children": [
+          {
+            "type": "Padding",
+            "properties": {
+              "padding": "EdgeInsets.all(20)"
+            },
             "children": [
               {
-                "type": "Icon",
-                "icon": "Icons.dashboard",
-                "size": 48,
-                "color": "Colors.purple"
-              },
-              {
-                "type": "SizedBox",
-                "height": 12
-              },
+                "type": "Column",
+                "children": [
+                  {
+                    "type": "Icon",
+                    "properties": {
+                      "icon": "dashboard",
+                      "size": 48,
+                      "color": "Colors.purple"
+                    }
+                  },
+                  {
+                    "type": "SizedBox",
+                    "properties": {
+                      "height": 12
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "properties": {
+                      "text": "JSON UI Demo",
+                      "style": {
+                        "fontSize": 24,
+                        "fontWeight": "FontWeight.bold"
+                      }
+                    }
+                  },
+                  {
+                    "type": "SizedBox",
+                    "properties": {
+                      "height": 8
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "properties": {
+                      "text": "Beautiful UI from JSON definitions"
+                    }
+                  },
+                  {
+                    "type": "SizedBox",
+                    "properties": {
+                      "height": 16
+                    }
+                  },
+                  {
+                    "type": "ElevatedButton",
+                    "properties": {
+                      "action": "showJsonMessage",
+                      "child": {
+                        "type": "Text",
+                        "properties": {
+                          "text": "JSON Action"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SizedBox",
+        "properties": {
+          "height": 16
+        }
+      },
+      {
+        "type": "Text",
+        "properties": {
+          "text": "✅ JSON UI Working!",
+          "style": {
+            "fontSize": 18,
+            "color": "Colors.green"
+          }
+        }
+      },
+      {
+        "type": "SizedBox",
+        "properties": {
+          "height": 16
+        }
+      },
+      {
+        "type": "Container",
+        "properties": {
+          "height": 100,
+          "color": "Colors.purple"
+        },
+        "children": [
+          {
+            "type": "Center",
+            "children": [
               {
                 "type": "Text",
-                "text": "JSON UI Demo",
-                "style": {
-                  "fontSize": 24,
-                  "fontWeight": "FontWeight.bold"
-                }
-              },
-              {
-                "type": "SizedBox",
-                "height": 8
-              },
-              {
-                "type": "Text",
-                "text": "Beautiful UI from JSON definitions"
-              },
-              {
-                "type": "SizedBox",
-                "height": 16
-              },
-              {
-                "type": "ElevatedButton",
-                "onPressed": "showJsonMessage",
-                "child": {
-                  "type": "Text",
-                  "text": "JSON Action"
+                "properties": {
+                  "text": "Purple Container",
+                  "style": {
+                    "color": "Colors.white",
+                    "fontSize": 16
+                  }
                 }
               }
             ]
           }
-        }
-      },
-      {
-        "type": "SizedBox",
-        "height": 16
-      },
-      {
-        "type": "Text",
-        "text": "✅ JSON UI Working!",
-        "style": {
-          "fontSize": 18,
-          "color": "Colors.green"
-        }
-      },
-      {
-        "type": "SizedBox",
-        "height": 16
-      },
-      {
-        "type": "Container",
-        "height": 100,
-        "color": "Colors.purple",
-        "child": {
-          "type": "Center",
-          "child": {
-            "type": "Text",
-            "text": "Purple Container",
-            "style": {
-              "color": "Colors.white",
-              "fontSize": 16
-            }
-          }
-        }
+        ]
       }
     ]
   };

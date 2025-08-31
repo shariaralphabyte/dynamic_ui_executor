@@ -200,12 +200,22 @@ class WidgetParser {
 
   Widget _buildContainer(Map<String, dynamic> props, List<dynamic>? children) {
     final child = children?.isNotEmpty == true ? _parseJsonWidget(children!.first) : null;
+    
+    // Handle color property - can be either in decoration or as direct property
+    Color? containerColor = _parseColor(props['color']);
+    BoxDecoration? decoration = _parseBoxDecoration(props['decoration']);
+    
+    // If color is specified directly and no decoration, create simple decoration
+    if (containerColor != null && decoration == null) {
+      decoration = BoxDecoration(color: containerColor);
+    }
+    
     return Container(
       width: _parseDouble(props['width']),
       height: _parseDouble(props['height']),
       padding: _parseEdgeInsets(props['padding']),
       margin: _parseEdgeInsets(props['margin']),
-      decoration: _parseBoxDecoration(props['decoration']),
+      decoration: decoration,
       child: child,
     );
   }
@@ -290,10 +300,30 @@ class WidgetParser {
   }
 
   Widget _buildIcon(Map<String, dynamic> props) {
+    IconData? iconData;
+    final iconValue = props['icon'];
+    
+    if (iconValue != null) {
+      // Handle both "Icons.dashboard" and "dashboard" formats
+      String iconName = iconValue.toString();
+      if (iconName.startsWith('Icons.')) {
+        iconName = iconName.substring(6); // Remove "Icons." prefix
+      }
+      iconData = _getIconFromName(iconName);
+    }
+    
     return Icon(
-      _parseIconData(props['icon']),
+      iconData ?? Icons.help,
       size: _parseDouble(props['size']),
       color: _parseColor(props['color']),
+    );
+  }
+
+  Widget _buildPadding(Map<String, dynamic> props, List<dynamic>? children) {
+    final child = children?.isNotEmpty == true ? _parseJsonWidget(children!.first) : null;
+    return Padding(
+      padding: _parseEdgeInsets(props['padding']) ?? const EdgeInsets.all(8.0),
+      child: child,
     );
   }
 
