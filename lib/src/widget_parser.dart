@@ -98,7 +98,7 @@ class WidgetParser {
       return _parseContainerString(definition);
     }
     
-    return Text('Cannot parse: ${definition.substring(0, 50)}...');
+    return Text('Cannot parse: ${definition.substring(0, definition.length > 50 ? 50 : definition.length)}...');
   }
 
   // JSON Widget Builders
@@ -294,8 +294,9 @@ class WidgetParser {
   }
 
   PreferredSizeWidget _parseAppBarString(String definition) {
-    final titleMatch = RegExp(r'''title:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);    return AppBar(
-      title: titleMatch != null ? Text(titleMatch.group(1)!) : null,
+    final titleMatch = RegExp(r'''title:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);
+    return AppBar(
+      title: titleMatch != null ? Text(titleMatch.group(2)!) : null,
     );
   }
 
@@ -331,13 +332,14 @@ class WidgetParser {
 
 
   Widget _parseElevatedButtonString(String definition) {
-    final childMatch = RegExp(r'''child:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
+    final childMatch = RegExp(r'''child:\s*Text\(\s*(["'])(.*?)\1\s*\)''').firstMatch(definition);
+    final onPressedMatch = RegExp(r'onPressed:\s*\(\)\s*\{\s*([^}]*)\s*\}').firstMatch(definition);
     
     return ElevatedButton(
       onPressed: onPressedMatch != null 
         ? () => actionHandler?.call('custom', {'code': onPressedMatch.group(1)})
         : null,
-      child: Text(childMatch?.group(1) ?? 'Button'),
+      child: Text(childMatch?.group(2) ?? 'Button'),
     );
   }
 
