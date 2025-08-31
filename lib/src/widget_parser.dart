@@ -576,15 +576,17 @@ class WidgetParser {
     
     // For now, return a simple placeholder since List.generate is complex to parse
     List<Widget> children = List.generate(4, (index) => Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       color: Colors.green,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.dashboard, size: 40, color: Colors.white),
-            const SizedBox(height: 10),
-            Text('Grid $index', style: const TextStyle(color: Colors.white)),
+            const Icon(Icons.dashboard, size: 24, color: Colors.white),
+            const SizedBox(height: 4),
+            Text('Grid $index', 
+                 style: const TextStyle(color: Colors.white, fontSize: 12)),
           ],
         ),
       ),
