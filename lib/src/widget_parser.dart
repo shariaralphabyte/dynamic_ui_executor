@@ -357,8 +357,56 @@ class WidgetParser {
       children = _parseChildrenFromString(childrenMatch.group(1)!);
     }
     
+    // Parse crossAxisAlignment
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center;
+    final crossAxisMatch = RegExp(r'crossAxisAlignment:\s*CrossAxisAlignment\.(\w+)').firstMatch(definition);
+    if (crossAxisMatch != null) {
+      switch (crossAxisMatch.group(1)) {
+        case 'start':
+          crossAxisAlignment = CrossAxisAlignment.start;
+          break;
+        case 'end':
+          crossAxisAlignment = CrossAxisAlignment.end;
+          break;
+        case 'stretch':
+          crossAxisAlignment = CrossAxisAlignment.stretch;
+          break;
+        case 'baseline':
+          crossAxisAlignment = CrossAxisAlignment.baseline;
+          break;
+        default:
+          crossAxisAlignment = CrossAxisAlignment.center;
+      }
+    }
+    
+    // Parse mainAxisAlignment
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start;
+    final mainAxisMatch = RegExp(r'mainAxisAlignment:\s*MainAxisAlignment\.(\w+)').firstMatch(definition);
+    if (mainAxisMatch != null) {
+      switch (mainAxisMatch.group(1)) {
+        case 'center':
+          mainAxisAlignment = MainAxisAlignment.center;
+          break;
+        case 'end':
+          mainAxisAlignment = MainAxisAlignment.end;
+          break;
+        case 'spaceBetween':
+          mainAxisAlignment = MainAxisAlignment.spaceBetween;
+          break;
+        case 'spaceAround':
+          mainAxisAlignment = MainAxisAlignment.spaceAround;
+          break;
+        case 'spaceEvenly':
+          mainAxisAlignment = MainAxisAlignment.spaceEvenly;
+          break;
+        default:
+          mainAxisAlignment = MainAxisAlignment.start;
+      }
+    }
+    
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: mainAxisAlignment,
+      crossAxisAlignment: crossAxisAlignment,
       mainAxisSize: MainAxisSize.min,
       children: children,
     );
@@ -404,9 +452,30 @@ class WidgetParser {
   }
 
   Widget _parseContainerString(String definition) {
+    // Parse width including double.infinity
+    double? width;
+    final widthInfinityMatch = RegExp(r'width:\s*double\.infinity').firstMatch(definition);
     final widthMatch = RegExp(r'width:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    
+    if (widthInfinityMatch != null) {
+      width = double.infinity;
+    } else if (widthMatch != null) {
+      width = double.parse(widthMatch.group(1)!);
+    }
+    
+    // Parse height including double.infinity
+    double? height;
+    final heightInfinityMatch = RegExp(r'height:\s*double\.infinity').firstMatch(definition);
     final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    
+    if (heightInfinityMatch != null) {
+      height = double.infinity;
+    } else if (heightMatch != null) {
+      height = double.parse(heightMatch.group(1)!);
+    }
+    
     final colorMatch = RegExp(r'color:\s*Colors\.(\w+)').firstMatch(definition);
+    final paddingMatch = RegExp(r'padding:\s*EdgeInsets\.all\((\d+(?:\.\d+)?)\)').firstMatch(definition);
     final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
     
     Widget? child;
@@ -414,9 +483,16 @@ class WidgetParser {
       child = _parseStringWidget(childMatch.group(1)!.trim());
     }
     
+    EdgeInsets? padding;
+    if (paddingMatch != null) {
+      final paddingValue = double.parse(paddingMatch.group(1)!);
+      padding = EdgeInsets.all(paddingValue);
+    }
+    
     return Container(
-      width: widthMatch != null ? double.parse(widthMatch.group(1)!) : null,
-      height: heightMatch != null ? double.parse(heightMatch.group(1)!) : null,
+      width: width,
+      height: height,
+      padding: padding,
       color: colorMatch != null ? _getColorFromName(colorMatch.group(1)!) : null,
       child: child,
     );
