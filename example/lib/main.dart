@@ -238,7 +238,7 @@ Scaffold(
     switch (action) {
       case 'increment':
         setState(() {
-          _counter++;
+
         });
         break;
       case 'showSnackBar':

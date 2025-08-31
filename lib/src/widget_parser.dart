@@ -636,11 +636,11 @@ class WidgetParser {
   }
 
   Widget _parseListTileString(String definition) {
-    final titleMatch = RegExp(r'title:\s*Text\([\'"](.*?)[\'"]\)').firstMatch(definition);
-    final subtitleMatch = RegExp(r'subtitle:\s*Text\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final titleMatch = RegExp(r'''title:\s*Text\(["'](.*?)["']\)''').firstMatch(definition);
+    final subtitleMatch = RegExp(r'''subtitle:\s*Text\(["'](.*?)["']\)''').firstMatch(definition);
     final leadingMatch = RegExp(r'leading:\s*(.+?)(?=,|\))').firstMatch(definition);
     final trailingMatch = RegExp(r'trailing:\s*(.+?)(?=,|\))').firstMatch(definition);
-    
+
     return ListTile(
       title: titleMatch != null ? Text(titleMatch.group(1)!) : null,
       subtitle: subtitleMatch != null ? Text(subtitleMatch.group(1)!) : null,
@@ -650,9 +650,9 @@ class WidgetParser {
   }
 
   Widget _parseChipString(String definition) {
-    final labelMatch = RegExp(r'label:\s*Text\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final labelMatch = RegExp(r'''label:\s*Text\(["'](.*?)["']\)''').firstMatch(definition);
     final avatarMatch = RegExp(r'avatar:\s*(.+?)(?=,|\))').firstMatch(definition);
-    
+
     return Chip(
       label: Text(labelMatch?.group(1) ?? 'Chip'),
       avatar: avatarMatch != null ? _parseStringWidget(avatarMatch.group(1)!.trim()) : null,
@@ -837,11 +837,11 @@ class WidgetParser {
   }
 
   Widget _parseImageNetworkString(String definition) {
-    final urlMatch = RegExp(r'Image\.network\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final urlMatch = RegExp(r'''Image\.network\(["'](.*?)["']\)''').firstMatch(definition);
     final widthMatch = RegExp(r'width:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
     final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
     final fitMatch = RegExp(r'fit:\s*BoxFit\.(\w+)').firstMatch(definition);
-    
+
     return Image.network(
       urlMatch?.group(1) ?? '',
       width: widthMatch != null ? double.parse(widthMatch.group(1)!) : null,
@@ -852,7 +852,7 @@ class WidgetParser {
   }
 
   Widget _parseImageAssetString(String definition) {
-    final assetMatch = RegExp(r'Image\.asset\([\'"](.*?)[\'"]\)').firstMatch(definition);
+    final assetMatch = RegExp(r'''Image\.asset\(["'](.*?)["']\)''').firstMatch(definition);
     final widthMatch = RegExp(r'width:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
     final heightMatch = RegExp(r'height:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
     final fitMatch = RegExp(r'fit:\s*BoxFit\.(\w+)').firstMatch(definition);
