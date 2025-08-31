@@ -51,5 +51,5 @@ flutter:
       windows:
         pluginClass: DynamicUiExecutorPlugin
       web:
-        pluginClass: DynamicUiExecutorPlugin
+        pluginClass: DynamicUiExecutorWeb
         fileName: dynamic_ui_executor_web.dart

@@ -599,7 +599,7 @@ class WidgetParser {
   }
 
   Widget _parseTextFieldString(String definition) {
-    return TextField(
+    return const TextField(
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         labelText: 'Enter Text',
