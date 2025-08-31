@@ -98,6 +98,22 @@ class WidgetParser {
       return _parseContainerString(definition);
     } else if (definition.startsWith('SizedBox(')) {
       return _parseSizedBoxString(definition);
+    } else if (definition.startsWith('Padding(')) {
+      return _parsePaddingString(definition);
+    } else if (definition.startsWith('CircleAvatar(')) {
+      return _parseCircleAvatarString(definition);
+    } else if (definition.startsWith('Icon(')) {
+      return _parseIconString(definition);
+    } else if (definition.startsWith('SingleChildScrollView(')) {
+      return _parseSingleChildScrollViewString(definition);
+    } else if (definition.startsWith('ListView(')) {
+      return _parseListViewString(definition);
+    } else if (definition.startsWith('GridView.count(')) {
+      return _parseGridViewString(definition);
+    } else if (definition.startsWith('TextField(')) {
+      return _parseTextFieldString(definition);
+    } else if (definition.startsWith('Switch(')) {
+      return _parseSwitchString(definition);
     }
     
     return Text('Cannot parse: ${definition.substring(0, definition.length > 50 ? 50 : definition.length)}...');
@@ -402,6 +418,175 @@ class WidgetParser {
     return Center(child: child);
   }
 
+  Widget _parsePaddingString(String definition) {
+    final paddingMatch = RegExp(r'padding:\s*EdgeInsets\.all\((\d+(?:\.\d+)?)\)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    double paddingValue = 8.0; // default
+    if (paddingMatch != null) {
+      paddingValue = double.parse(paddingMatch.group(1)!);
+    }
+    
+    return Padding(
+      padding: EdgeInsets.all(paddingValue),
+      child: child,
+    );
+  }
+
+  Widget _parseCircleAvatarString(String definition) {
+    final radiusMatch = RegExp(r'radius:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final backgroundColorMatch = RegExp(r'backgroundColor:\s*Colors\.(\w+)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return CircleAvatar(
+      radius: radiusMatch != null ? double.parse(radiusMatch.group(1)!) : 20.0,
+      backgroundColor: backgroundColorMatch != null ? _getColorFromName(backgroundColorMatch.group(1)!) : Colors.grey,
+      child: child,
+    );
+  }
+
+  Widget _parseIconString(String definition) {
+    final iconMatch = RegExp(r'Icon\(Icons\.(\w+)').firstMatch(definition);
+    final colorMatch = RegExp(r'color:\s*Colors\.(\w+)').firstMatch(definition);
+    final sizeMatch = RegExp(r'size:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    
+    IconData iconData = Icons.help; // default
+    if (iconMatch != null) {
+      iconData = _getIconFromName(iconMatch.group(1)!) ?? Icons.help;
+    }
+    
+    return Icon(
+      iconData,
+      color: colorMatch != null ? _getColorFromName(colorMatch.group(1)!) : null,
+      size: sizeMatch != null ? double.parse(sizeMatch.group(1)!) : null,
+    );
+  }
+
+  IconData? _getIconFromName(String iconName) {
+    switch (iconName.toLowerCase()) {
+      case 'people': return Icons.people;
+      case 'shopping_cart': return Icons.shopping_cart;
+      case 'bar_chart': return Icons.bar_chart;
+      case 'settings': return Icons.settings;
+      case 'touch_app': return Icons.touch_app;
+      case 'home': return Icons.home;
+      case 'person': return Icons.person;
+      case 'email': return Icons.email;
+      case 'phone': return Icons.phone;
+      case 'favorite': return Icons.favorite;
+      case 'star': return Icons.star;
+      case 'add': return Icons.add;
+      case 'edit': return Icons.edit;
+      case 'delete': return Icons.delete;
+      case 'search': return Icons.search;
+      case 'menu': return Icons.menu;
+      case 'close': return Icons.close;
+      case 'check': return Icons.check;
+      case 'arrow_back': return Icons.arrow_back;
+      case 'arrow_forward': return Icons.arrow_forward;
+      case 'dashboard': return Icons.dashboard;
+      case 'message': return Icons.message;
+      default: return null;
+    }
+  }
+
+  Widget _parseSingleChildScrollViewString(String definition) {
+    final paddingMatch = RegExp(r'padding:\s*EdgeInsets\.all\((\d+(?:\.\d+)?)\)').firstMatch(definition);
+    final childMatch = RegExp(r'child:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    Widget? child;
+    if (childMatch != null) {
+      child = _parseStringWidget(childMatch.group(1)!.trim());
+    }
+    
+    return SingleChildScrollView(
+      padding: paddingMatch != null ? EdgeInsets.all(double.parse(paddingMatch.group(1)!)) : null,
+      child: child,
+    );
+  }
+
+  Widget _parseListViewString(String definition) {
+    final scrollDirectionMatch = RegExp(r'scrollDirection:\s*Axis\.(\w+)').firstMatch(definition);
+    final childrenMatch = RegExp(r'children:\s*(.+)(?=,\s*\)|$)', dotAll: true).firstMatch(definition);
+    
+    List<Widget> children = [];
+    if (childrenMatch != null) {
+      // For now, return a simple placeholder since List.generate is complex to parse
+      children = [
+        Container(
+          width: 120,
+          height: 100,
+          margin: EdgeInsets.all(8),
+          color: Colors.blue,
+          child: Center(child: Text('List Item', style: TextStyle(color: Colors.white))),
+        ),
+      ];
+    }
+    
+    return ListView(
+      scrollDirection: scrollDirectionMatch?.group(1) == 'horizontal' ? Axis.horizontal : Axis.vertical,
+      children: children,
+    );
+  }
+
+  Widget _parseGridViewString(String definition) {
+    final crossAxisCountMatch = RegExp(r'crossAxisCount:\s*(\d+)').firstMatch(definition);
+    final crossAxisSpacingMatch = RegExp(r'crossAxisSpacing:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    final mainAxisSpacingMatch = RegExp(r'mainAxisSpacing:\s*(\d+(?:\.\d+)?)').firstMatch(definition);
+    
+    // For now, return a simple placeholder since List.generate is complex to parse
+    List<Widget> children = List.generate(4, (index) => Container(
+      padding: EdgeInsets.all(16),
+      color: Colors.green,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.dashboard, size: 40, color: Colors.white),
+            SizedBox(height: 10),
+            Text('Grid $index', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+      ),
+    ));
+    
+    return GridView.count(
+      crossAxisCount: crossAxisCountMatch != null ? int.parse(crossAxisCountMatch.group(1)!) : 2,
+      crossAxisSpacing: crossAxisSpacingMatch != null ? double.parse(crossAxisSpacingMatch.group(1)!) : 0,
+      mainAxisSpacing: mainAxisSpacingMatch != null ? double.parse(mainAxisSpacingMatch.group(1)!) : 0,
+      children: children,
+    );
+  }
+
+  Widget _parseTextFieldString(String definition) {
+    return TextField(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Enter Text',
+      ),
+    );
+  }
+
+  Widget _parseSwitchString(String definition) {
+    final valueMatch = RegExp(r'value:\s*(true|false)').firstMatch(definition);
+    bool value = valueMatch?.group(1) == 'true';
+    
+    return Switch(
+      value: value,
+      onChanged: (val) {},
+    );
+  }
+
   Color? _getColorFromName(String colorName) {
     switch (colorName.toLowerCase()) {
       case 'red': return Colors.red;
@@ -409,6 +594,8 @@ class WidgetParser {
       case 'green': return Colors.green;
       case 'yellow': return Colors.yellow;
       case 'orange': return Colors.orange;
+      case 'orangeaccent': return Colors.orangeAccent;
+      case 'deeporange': return Colors.deepOrange;
       case 'purple': return Colors.purple;
       case 'pink': return Colors.pink;
       case 'teal': return Colors.teal;

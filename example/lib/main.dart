@@ -33,32 +33,89 @@ class _DemoHomePageState extends State<DemoHomePage> {
   int _selectedIndex = 0;
   int _counter = 0;
 
-  // Example 1: String-based widget definition
+  // Example: Full Widget Demo UI as a string
   String get stringWidgetDefinition => """
-    Scaffold(
-      appBar: AppBar(title: Text('Dynamic UI Demo')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+Scaffold(
+  appBar: AppBar(
+    title: Text('Full Widget Demo'),
+    backgroundColor: Colors.teal,
+  ),
+  body: SingleChildScrollView(
+    padding: EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.all(20),
+          color: Colors.orangeAccent,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Welcome to Full UI!'),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () { showSnackBar() },
+                child: Text('Click Me'),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
+        Container(
+          height: 150,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              Container(
+                width: 120,
+                color: Colors.blue,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.star, color: Colors.white, size: 30),
+                    SizedBox(height: 10),
+                    Text('Item 1', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
+        Container(
+          height: 300,
+          child: GridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            children: [],
+          ),
+        ),
+        SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text('Welcome to Dynamic UI!'),
-            SizedBox(height: 20),
-            Text('Counter: $_counter'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () { increment() },
-              child: Text('Increment Counter'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () { showSnackBar() },
-              child: Text('Show SnackBar'),
-            )
+            Icon(Icons.home, size: 40, color: Colors.red),
+            Icon(Icons.person, size: 40, color: Colors.blue),
+            Icon(Icons.settings, size: 40, color: Colors.green),
+            Icon(Icons.message, size: 40, color: Colors.orange),
           ],
         ),
-      ),
-    )
-  """;
+        SizedBox(height: 20),
+        TextField(),
+        SizedBox(height: 20),
+        Row(
+          children: [
+            Text('Enable Feature:'),
+            SizedBox(width: 10),
+            Switch(value: true),
+          ],
+        ),
+      ],
+    ),
+  ),
+)
+""";
 
   // Example 2: JSON-based widget definition
   Map<String, dynamic> get jsonWidgetDefinition => {
